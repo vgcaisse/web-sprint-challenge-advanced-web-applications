@@ -20,8 +20,14 @@ export default function App() {
 
   // ✨ Research `useNavigate` in React Router v.6
   const navigate = useNavigate()
-  const redirectToLogin = () => { /* ✨ implement */ }
-  const redirectToArticles = () => { /* ✨ implement */ }
+
+  const redirectToLogin = () => {
+    navigate('/')
+  }
+
+  const redirectToArticles = () => {
+    navigate('/articles')
+  }
 
   const logout = () => {
     // ✨ implement
@@ -29,6 +35,12 @@ export default function App() {
     // and a message saying "Goodbye!" should be set in its proper state.
     // In any case, we should redirect the browser back to the login screen,
     // using the helper above.
+    if (window.localStorage.getItem('token')) {
+      setMessage('Goodbye!')
+      window.localStorage.removeItem('token')
+    }
+
+    redirectToLogin()
   }
 
   const login = ({ username, password }) => {
@@ -38,12 +50,15 @@ export default function App() {
     // On success, we should set the token to local storage in a 'token' key,
     // put the server success message in its proper state, and redirect
     // to the Articles screen. Don't forget to turn off the spinner!
-    axios.post(loginUrl, {username, password})
+    axios.post(loginUrl, { username, password })
       .then(res => {
+        // setSpinnerOn(true)
         window.localStorage.setItem('token', res.data.token)
+        redirectToArticles()
+        setMessage(res.data.message)
       })
       .catch(err => {
-        console.log({err})
+        console.log({ err })
       })
   }
 
@@ -56,6 +71,16 @@ export default function App() {
     // If something goes wrong, check the status of the response:
     // if it's a 401 the token might have gone bad, and we should redirect to login.
     // Don't forget to turn off the spinner!
+    axios.get(articlesUrl)
+      .then(res => {
+        console.log(res)
+        setSpinnerOn(false)
+        setMessage(res.data.message)
+        setArticles(res.data.articles)
+      })
+      .catch(err => {
+        console.log({err})
+      })
   }
 
   const postArticle = article => {
@@ -63,6 +88,7 @@ export default function App() {
     // The flow is very similar to the `getArticles` function.
     // You'll know what to do! Use log statements or breakpoints
     // to inspect the response from the server.
+    redirectToArticles()
   }
 
   const updateArticle = ({ article_id, article }) => {
