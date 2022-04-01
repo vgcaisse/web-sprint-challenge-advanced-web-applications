@@ -6,6 +6,8 @@ import Message from './Message'
 import ArticleForm from './ArticleForm'
 import Spinner from './Spinner'
 
+import axios from 'axios'
+
 const articlesUrl = 'http://localhost:9000/api/articles'
 const loginUrl = 'http://localhost:9000/api/login'
 
@@ -36,6 +38,13 @@ export default function App() {
     // On success, we should set the token to local storage in a 'token' key,
     // put the server success message in its proper state, and redirect
     // to the Articles screen. Don't forget to turn off the spinner!
+    axios.post(loginUrl, {username, password})
+      .then(res => {
+        window.localStorage.setItem('token', res.data.token)
+      })
+      .catch(err => {
+        console.log({err})
+      })
   }
 
   const getArticles = () => {
@@ -68,21 +77,36 @@ export default function App() {
   return (
     // ✨ fix the JSX: `Spinner`, `Message`, `LoginForm`, `ArticleForm` and `Articles` expect props ❗
     <React.StrictMode>
-      <Spinner />
-      <Message />
+      <Spinner on={spinnerOn} />
+      <Message message={message} />
       <button id="logout" onClick={logout}>Logout from app</button>
       <div id="wrapper" style={{ opacity: spinnerOn ? "0.25" : "1" }}> {/* <-- do not change this line */}
         <h1>Advanced Web Applications</h1>
         <nav>
-          <NavLink id="loginScreen" to="/">Login</NavLink>
+          <NavLink id="loginScreen" to="/" login={login}>Login</NavLink>
           <NavLink id="articlesScreen" to="/articles">Articles</NavLink>
         </nav>
         <Routes>
-          <Route path="/" element={<LoginForm />} />
+          <Route path="/" element={<LoginForm login={login} />} />
           <Route path="articles" element={
             <>
-              <ArticleForm />
-              <Articles />
+              <ArticleForm
+                postArticle={postArticle}
+                updateArticle={updateArticle}
+                currentArticleId={currentArticleId}
+                setCurrentArticleId={setCurrentArticleId}
+
+                currentArticle={articles.find((art) => {
+                  return art.article_id == currentArticleId
+                })}
+              />
+
+              <Articles
+                articles={articles}
+                getArticles={getArticles}
+                deleteArticle={deleteArticle}
+                setCurrentArticleId={setCurrentArticleId}
+              />
             </>
           } />
         </Routes>
