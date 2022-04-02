@@ -72,7 +72,7 @@ export default function App() {
     // If something goes wrong, check the status of the response:
     // if it's a 401 the token might have gone bad, and we should redirect to login.
     // Don't forget to turn off the spinner!
-    setSpinnerOn(false)
+    setSpinnerOn(true)
     axiosWithAuth().get(articlesUrl)
       .then(res => {
         console.log(res)
@@ -82,6 +82,9 @@ export default function App() {
       .catch(err => {
         console.log({ err })
       })
+      .finally(res => {
+        setSpinnerOn(false)
+      })
   }
 
   const postArticle = article => {
@@ -90,6 +93,19 @@ export default function App() {
     // You'll know what to do! Use log statements or breakpoints
     // to inspect the response from the server.
     // redirectToArticles()
+    setSpinnerOn(true)
+    setMessage('')
+    axiosWithAuth().post(articlesUrl, article)
+      .then(res => {
+        setArticles([...articles, res.data.article])
+        setMessage(res.data.message)
+      })
+      .catch(err => {
+        console.log({err})
+      })
+      .finally(() => {
+        setSpinnerOn(false)
+      })
   }
 
   const updateArticle = ({ article_id, article }) => {
@@ -102,7 +118,7 @@ export default function App() {
     axiosWithAuth().delete(`${articlesUrl}/${article_id}`)
       .then(res => {
         setArticles(articles.filter((art) => {
-          return art.article_id != article_id
+          return art.article_id !== article_id
         }))
         setMessage(res.data.message)
       })
