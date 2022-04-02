@@ -10,6 +10,7 @@ export default function ArticleForm(props) {
     postArticle, 
     updateArticle, 
     currentArticle, 
+    currentArticleId
   } = props
 
   useEffect(() => {
@@ -34,6 +35,12 @@ export default function ArticleForm(props) {
     // ✨ implement
     // We must submit a new post or update an existing one,
     // depending on the truthyness of the `currentArticle` prop.
+    if(currentArticle) {
+      updateArticle(currentArticleId, values)
+    } else {
+      postArticle(values)
+    }
+    setValues(initialFormValues)
   }
 
   const isDisabled = () => {
