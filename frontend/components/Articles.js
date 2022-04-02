@@ -17,7 +17,8 @@ export default function Articles(props) {
 
   useEffect(() => {
     // ✨ grab the articles here, on first render only
-    getArticles(articles)
+    getArticles()
+    // console.log(articles)
   }, [])
 
   return (
@@ -38,7 +39,7 @@ export default function Articles(props) {
                 </div>
                 <div>
                   <button disabled={true} onClick={Function.prototype}>Edit</button>
-                  <button disabled={true} onClick={Function.prototype}>Delete</button>
+                  <button onClick={() => {deleteArticle(art.article_id)}}>Delete</button>
                 </div>
               </div>
             )
