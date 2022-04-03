@@ -99,6 +99,7 @@ export default function App() {
       .then(res => {
         setArticles([...articles, res.data.article])
         setMessage(res.data.message)
+        console.log(res.data.article_id)
       })
       .catch(err => {
         console.log({err})
@@ -111,10 +112,36 @@ export default function App() {
   const updateArticle = ({ article_id, article }) => {
     // ✨ implement
     // You got this!
+    axiosWithAuth().put(`${articlesUrl}/${article_id}`, article)
+      .then(res => {
+        setArticles(articles.map(art => {
+          setSpinnerOn(true)
+          return (art.id === id) ? res.data.article : art
+        }))
+        setCurrentArticleId()
+      })
+      .catch(err => {
+        console.log(err)
+      })
+      .finally(() => {
+        setSpinnerOn(false)
+      })
+
+    const array = []
+    for (let i = 0; i < articles.length; i++) {
+      if (articles[i].article_id === article_id) {
+        array.push(article)
+      } else {
+        array.push(articles[i])
+      }
+    }
+    setArticles(array)
+    setCurrentArticleId(null)
   }
 
   const deleteArticle = article_id => {
     // ✨ implement
+    setSpinnerOn(true)
     axiosWithAuth().delete(`${articlesUrl}/${article_id}`)
       .then(res => {
         setArticles(articles.filter((art) => {
@@ -124,6 +151,9 @@ export default function App() {
       })
       .catch(err => {
         console.log(err)
+      })
+      .finally(() => {
+        setSpinnerOn(false)
       })
   }
 

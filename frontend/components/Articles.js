@@ -2,6 +2,7 @@ import React, { useEffect } from 'react'
 import { Navigate } from 'react-router-dom'
 import PT from 'prop-types'
 
+
 export default function Articles(props) {
   // ✨ where are my props? Destructure them here
   const {
@@ -21,6 +22,11 @@ export default function Articles(props) {
     // console.log(articles)
   }, [])
 
+  const handleClick = e => {
+    // e.preventDefault()
+    (e.target.value)
+    console.log('click')
+  }
   return (
     // ✨ fix the JSX: replace `Function.prototype` with actual functions
     // and use the articles prop to generate articles
@@ -38,7 +44,7 @@ export default function Articles(props) {
                   <p>Topic: {art.topic}</p>
                 </div>
                 <div>
-                  <button disabled={false} onClick={Function.prototype}>Edit</button>
+                  <button disabled={false} onClick={handleClick}>Edit</button>
                   <button onClick={() => {deleteArticle(art.article_id)}}>Delete</button>
                 </div>
               </div>
