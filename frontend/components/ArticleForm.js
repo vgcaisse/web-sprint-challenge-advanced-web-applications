@@ -10,7 +10,7 @@ export default function ArticleForm(props) {
     postArticle, 
     updateArticle, 
     currentArticle, 
-    currentArticleId
+    // currentArticleId
   } = props
 
   useEffect(() => {
@@ -36,7 +36,7 @@ export default function ArticleForm(props) {
     // We must submit a new post or update an existing one,
     // depending on the truthyness of the `currentArticle` prop.
     if(currentArticle) {
-      updateArticle(currentArticleId, values)
+      updateArticle(currentArticle.article_id, values)
     } else {
       postArticle(values)
     }
@@ -46,7 +46,7 @@ export default function ArticleForm(props) {
   const isDisabled = () => {
     // ✨ implement
     // Make sure the inputs have some values
-    if (values.title && values.text && values.topic) {
+    if (values.title.trim('') && values.text.trim('') && values.topic.trim('')) {
       return false
     } else {
       return true
@@ -54,7 +54,6 @@ export default function ArticleForm(props) {
   }
 
   const cancelEdit = () => {
-    // e.preventDefault()
     setValues(initialFormValues)
   }
 

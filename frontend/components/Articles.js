@@ -8,7 +8,8 @@ export default function Articles(props) {
   const {
     articles,
     getArticles,
-    deleteArticle
+    deleteArticle,
+    setCurrentArticleId
   } = props
   // ✨ implement conditional logic: if no token exists
   // we should render a Navigate to login screen (React Router v.6)
@@ -22,11 +23,6 @@ export default function Articles(props) {
     // console.log(articles)
   }, [])
 
-  const handleClick = e => {
-    // e.preventDefault()
-    (e.target.value)
-    console.log('click')
-  }
   return (
     // ✨ fix the JSX: replace `Function.prototype` with actual functions
     // and use the articles prop to generate articles
@@ -44,7 +40,7 @@ export default function Articles(props) {
                   <p>Topic: {art.topic}</p>
                 </div>
                 <div>
-                  <button disabled={false} onClick={handleClick}>Edit</button>
+                  <button disabled={false} onClick={() => setCurrentArticleId(art.article_id)}>Edit</button>
                   <button onClick={() => {deleteArticle(art.article_id)}}>Delete</button>
                 </div>
               </div>

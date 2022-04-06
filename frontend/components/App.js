@@ -109,33 +109,27 @@ export default function App() {
       })
   }
 
-  const updateArticle = ({ article_id, article }) => {
+  const updateArticle = (article_id, article) => {
     // ✨ implement
     // You got this!
+    // console.log('clicked')
+    setSpinnerOn(true)
     axiosWithAuth().put(`${articlesUrl}/${article_id}`, article)
       .then(res => {
         setArticles(articles.map(art => {
-          setSpinnerOn(true)
-          return (art.id === id) ? res.data.article : art
+          return art.article_id === article_id
+            ? res.data.article
+            : art
         }))
-        setCurrentArticleId()
+        setMessage(res.data.message)
+        setCurrentArticleId(null)
       })
       .catch(err => {
-        console.log(err)
+        setMessage(err?.response?.data?.message)
       })
       .finally(() => {
         setSpinnerOn(false)
       })
-
-    const array = []
-    for (let i = 0; i < articles.length; i++) {
-      if (articles[i].article_id === article_id) {
-        array.push(article)
-      } else {
-        array.push(articles[i])
-      }
-    }
-    setArticles(array)
     setCurrentArticleId(null)
   }
 
@@ -166,7 +160,7 @@ export default function App() {
       <div id="wrapper" style={{ opacity: spinnerOn ? "0.25" : "1" }}> {/* <-- do not change this line */}
         <h1>Advanced Web Applications</h1>
         <nav>
-          <NavLink id="loginScreen" to="/" login={login}>Login</NavLink>
+          <NavLink id="loginScreen" to="/" >Login</NavLink>
           <NavLink id="articlesScreen" to="/articles">Articles</NavLink>
         </nav>
         <Routes>
